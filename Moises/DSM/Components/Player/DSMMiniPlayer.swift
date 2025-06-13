@@ -18,7 +18,7 @@ struct DSMMiniPlayer: View {
         VStack(spacing: DSMSize.Spacing.xs) {
             
             Slider(value: $viewModel.progress, in: 0...1)
-            .accentColor(.dsmPrimary)
+                .accentColor(.dsmPrimary)
             
             HStack {
                 DSMTitle(text: viewModel.currentTime, fontSize: .small)
@@ -40,8 +40,8 @@ struct DSMMiniPlayer: View {
                 }) {
                     ZStack {
                         Circle()
-                            .fill(Color.white)
-                            .frame(width: 60, height: 64)
+                            .fill(Color.dsmPrimary)
+                            .frame(width: 60, height: 60)
                         
                         DSMImage(icon: .system(name: viewModel.isPlaying ? "pause.fill" : "play.fill"),
                                  color: .customBackground)

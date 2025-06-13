@@ -1,26 +1,27 @@
 //
-//  SongRowView.swift
+//  ListItemRowView.swift
 //  Moises
 //
-//  Created by Gustavo Guimarães on 10/06/25.
+//  Created by Gustavo Guimarães on 13/06/25.
 //
 
 import SwiftUI
 
-struct SongRowView: View {
-    let song: Song
+struct ListItemRowView: View {
+    let title: String
+    let subtitle: String
+    let imageUrl: String
     
     var body: some View {
         HStack(spacing: DSMSize.Spacing.md) {
+            DSMAsyncImage(url: URL(string: imageUrl))
             
-            DSMAsyncImage(url: URL(string: song.artworkUrl100))
-            
-            VStack(alignment: .leading) {
-                Text(song.trackName)
+            VStack(alignment: .leading, spacing: 4) {
+                Text(title)
                     .font(DSMFont.listTitle)
                     .foregroundColor(.dsmPrimary)
                 
-                Text(song.artistName)
+                Text(subtitle)
                     .font(DSMFont.listSubtitle)
                     .foregroundColor(.dsmSecondaryText)
             }

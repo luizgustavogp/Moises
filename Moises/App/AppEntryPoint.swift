@@ -9,9 +9,14 @@ import SwiftUI
 
 @main
 struct AppEntryPoint: App {
+    
+    @StateObject private var themeManager = ThemeManager()
+    
     var body: some Scene {
         WindowGroup {
             AppContainerView()
+                .preferredColorScheme(themeManager.colorScheme)
+                .environmentObject(themeManager)
                 .ignoresSafeArea()
         }
     }

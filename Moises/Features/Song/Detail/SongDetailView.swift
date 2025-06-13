@@ -12,6 +12,7 @@ struct SongDetailView: View {
     
     @State private var progress: Double = 0.0
     @State private var showBottonSheet = false
+    @State private var showAlbumSheet = false
     
     var body: some View {
         AppNavBar(leadingButton: .back,
@@ -37,7 +38,7 @@ struct SongDetailView: View {
                     
                     VStack(spacing: DSMSize.Spacing.xs) {
                         
-                        DSMTitle(text: song.trackName, fontSize: .large, fontWeight: .semibold)
+                        DSMTitle(text: song.trackName.orEmpty, fontSize: .large, fontWeight: .semibold)
                         
                         DSMSubtitle(text: song.artistName)
                     }
@@ -50,11 +51,18 @@ struct SongDetailView: View {
                     )
                 }
             }
-            .padding()
             .customNavigationTitle("Song Details")
+            .padding()
             .sheet(isPresented: $showBottonSheet) {
-                MoreActionsView(song: song, onOpenAlbum: {})
-                    .presentationDetents([.fraction(0.3), .medium])
+                MoreActionsView(song: song, onOpenAlbum: {
+                    showBottonSheet.toggle()
+                    showAlbumSheet.toggle()
+                })
+                .presentationDetents([.fraction(0.3), .fraction(0.4)])
+            }
+            .sheet(isPresented: $showAlbumSheet) {
+                AlbumsUIView(song: song)
+                    .presentationDetents([.fraction(1), .large])
             }
         })
     }

@@ -29,6 +29,7 @@ struct DSMImage: View {
             switch icon {
             case .system(let name):
                 Image(systemName: name)
+                    .resizable()
             case .asset(let name):
                 Image(name)
                     .resizable()

@@ -5,15 +5,18 @@
 //  Created by Gustavo Guimarães on 10/06/25.
 //
 
+import Foundation
+
 struct Song: Decodable, Identifiable {
-    let trackId: Int
-    var id: Int { trackId }
+    let trackId: Int?
+    var id: Int { trackId ?? collectionId }
     let artistName: String
-    let trackName: String
+    let trackName: String?
     let artworkUrl100: String
-    let previewUrl: String?
-    let collectionName: String
+    let collectionId: Int
+    let collectionName: String?
     let trackTimeMillis: Int?
+    let kind: String?
 }
 
 extension Song {
@@ -22,8 +25,9 @@ extension Song {
         artistName: "Luiz",
         trackName: "Legal",
         artworkUrl100: "",
-        previewUrl: "",
+        collectionId: 1,
         collectionName: "Greatest Hits",
-        trackTimeMillis: 1_000_000
+        trackTimeMillis: 1_000_000,
+        kind: "song"
     )
 }

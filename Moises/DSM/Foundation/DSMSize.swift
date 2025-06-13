@@ -13,6 +13,7 @@ public enum DSMSize {
         public static let small: CGFloat = 16
         public static let medium: CGFloat = 24
         public static let large: CGFloat = 32
+        public static let xlarge: CGFloat = 48
     }
     
     public enum CornerRadius {

@@ -23,8 +23,9 @@ final class RemoteSongsRepository: SongsRepository {
               let url = URL(string: "https://itunes.apple.com/search?term=\(query)&media=music&limit=\(limit)&offset=\(offset)") else {
             return []
         }
+        
+        let response: SearchResponse<Song> = try await network.request(url)
 
-        let response: SearchResponse = try await network.request(url)
         return response.results
     }
 }

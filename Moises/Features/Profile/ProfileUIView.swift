@@ -8,11 +8,21 @@
 import SwiftUI
 
 struct ProfileUIView: View {
+    
+    @EnvironmentObject var themeManager: ThemeManager
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Form {
+            Section(header: Text("Appearance")) {
+                Picker("Theme", selection: $themeManager.selectedThemeRaw) {
+                    ForEach(DSMThemeMode.allCases) { mode in
+                        Text(mode.description).tag(mode.rawValue)
+                    }
+                }
+                .pickerStyle(SegmentedPickerStyle())
+            }
+        }
+        .navigationTitle("Profile")
     }
 }
 
-#Preview {
-    ProfileUIView()
-}
