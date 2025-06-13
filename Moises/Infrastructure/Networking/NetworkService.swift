@@ -7,6 +7,6 @@
 
 import Foundation
 
-protocol NetworkService {
+protocol NetworkService: Sendable {
     func request<T: Decodable>(_ url: URL) async throws -> T
 }

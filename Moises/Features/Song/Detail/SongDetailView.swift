@@ -58,7 +58,7 @@ struct SongDetailView: View {
                     showBottonSheet.toggle()
                     showAlbumSheet.toggle()
                 })
-                .presentationDetents([.fraction(0.3), .fraction(0.4)])
+                .presentationDetents([.fraction(0.25), .fraction(0.3)])
             }
             .sheet(isPresented: $showAlbumSheet) {
                 AlbumsUIView(song: song)

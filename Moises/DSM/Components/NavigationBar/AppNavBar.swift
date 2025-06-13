@@ -43,7 +43,9 @@ public struct AppNavBar<Content: View>: View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
         }
         .onPreferenceChange(CustomNavBarTitlePreferenceKey.self) { newValue in
-            navigationTitle = newValue
+            Task { @MainActor in
+                navigationTitle = newValue
+            }
         }
         .navigationBarHidden(true)
     }
@@ -99,7 +101,7 @@ public enum AppNavBarTrailingButton {
 }
 
 struct CustomNavBarTitlePreferenceKey: PreferenceKey {
-    static var defaultValue: String = ""
+    static let defaultValue: String = ""
     static func reduce(value: inout String, nextValue: () -> String) {
         value = nextValue()
     }

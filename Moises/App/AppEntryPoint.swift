@@ -10,7 +10,7 @@ import SwiftUI
 @main
 struct AppEntryPoint: App {
     
-    @StateObject private var themeManager = ThemeManager()
+    @StateObject private var themeManager = AppThemeManager()
     
     var body: some Scene {
         WindowGroup {

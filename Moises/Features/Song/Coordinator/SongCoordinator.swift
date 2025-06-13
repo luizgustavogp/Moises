@@ -8,6 +8,7 @@
 import UIKit
 import SwiftUI
 
+
 final class SongCoordinator {
     let navigationController: UINavigationController
 
@@ -15,6 +16,7 @@ final class SongCoordinator {
         self.navigationController = navigationController
     }
 
+    @MainActor
     func goToDetail(song: Song) {
         let detailView = SongDetailView(song: song)
         let hosting = UIHostingController(rootView: detailView)

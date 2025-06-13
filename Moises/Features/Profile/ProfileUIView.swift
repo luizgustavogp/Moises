@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ProfileUIView: View {
     
-    @EnvironmentObject var themeManager: ThemeManager
+    @EnvironmentObject var themeManager: AppThemeManager
 
     var body: some View {
         Form {

@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol SongsRepository {
+protocol SongsRepository: Sendable {
     func searchSongs(term: String, offset: Int, limit: Int) async throws -> [Song]
 }
 

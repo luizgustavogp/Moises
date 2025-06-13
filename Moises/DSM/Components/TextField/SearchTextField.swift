@@ -20,7 +20,7 @@ struct SearchTextField: View {
             TextField(placeholder, text: $text)
                 .autocapitalization(.none)
                 .disableAutocorrection(true)
-                .font(DSMFont.bodyMedium)
+                .font(DSMFont.sfProDisplay(size: .medium, weight: .regular))
                 .foregroundColor(.dsmSecondaryText)
         }
         .padding(DSMSize.Spacing.md)

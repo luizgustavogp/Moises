@@ -69,8 +69,6 @@ final class SongsViewModel: ObservableObject {
 
         state = .loading
         
-        try? await Task.sleep(nanoseconds: 2 * 1_000_000_000)
-
         do {
             let offset = page * pageLimit
             let newSongs = try await repository.searchSongs(term: term, offset: offset, limit: pageLimit)

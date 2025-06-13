@@ -23,7 +23,7 @@ struct AppTabView: View {
                     Label("Songs", systemImage: "music.note")
                 }.tag(Tab.songs)
             
-          
+            
             ProfileUIView()
                 .tabItem {
                     Label("Profile", systemImage: "person")

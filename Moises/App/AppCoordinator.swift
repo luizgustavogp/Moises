@@ -8,9 +8,10 @@
 import UIKit
 import SwiftUI
 
+@MainActor
 final class AppCoordinator {
     let navigationController = UINavigationController()
-
+    
     func start() -> UIViewController {
         let songCoordinator = SongCoordinator(navigationController: navigationController)
         let rootView = AppTabView(songCoordinator: songCoordinator)

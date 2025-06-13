@@ -17,13 +17,9 @@ struct ListItemRowView: View {
             DSMAsyncImage(url: URL(string: imageUrl))
             
             VStack(alignment: .leading, spacing: 4) {
-                Text(title)
-                    .font(DSMFont.listTitle)
-                    .foregroundColor(.dsmPrimary)
+                DSMTitle(text: title, fontSize: .medium)
                 
-                Text(subtitle)
-                    .font(DSMFont.listSubtitle)
-                    .foregroundColor(.dsmSecondaryText)
+                DSMSubtitle(text: subtitle)
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

@@ -48,12 +48,4 @@ public enum DSMFont {
         Font.custom("Articulat CF", size: size.rawValue)
             .weight(weight.swiftUIWeight)
     }
-    
-    public static let title = Font.custom("SF Pro Display", size: 32).weight(.semibold)
-    public static let subtitle = Font.custom("SF Pro Display", size: 14).weight(.medium)
-    
-    public static let bodyMedium = Font.custom("SFProDisplay-Medium", size: 16)
-    public static let listTitle = Font.custom("SFProDisplay-Regular", size: 16)
-    public static let listSubtitle = Font.custom("SFProDisplay-Regular", size: 12)
-    public static let button = Font.system(size: 16, weight: .semibold)
 }
