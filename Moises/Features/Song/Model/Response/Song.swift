@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Song: Decodable, Identifiable {
+struct Song: Decodable, Identifiable, Hashable {
     let trackId: Int?
     var id: Int { trackId ?? collectionId }
     let artistName: String
@@ -21,7 +21,7 @@ struct Song: Decodable, Identifiable {
 
 extension Song {
     static let preview = Song(
-        trackId: 123,
+        trackId: UUID().hashValue,
         artistName: "Luiz",
         trackName: "Legal",
         artworkUrl100: "",

@@ -30,10 +30,4 @@ public enum DSMSize {
         public static let lg: CGFloat = 24
         public static let xl: CGFloat = 32
     }
-    
-    public enum Button {
-        public static let small: CGFloat = 36
-        public static let medium: CGFloat = 48
-        public static let large: CGFloat = 56
-    }
 }

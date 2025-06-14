@@ -11,7 +11,7 @@ import Foundation
 @MainActor
 final class SongsViewModel: ObservableObject {
     
-    @Published var searchTerm: String = "Jesus"
+    @Published var searchTerm: String = ""
     @Published private(set) var songs: [Song] = []
     @Published private(set) var state = ViewState.idle
     

@@ -13,12 +13,11 @@ struct AppTabView: View {
     enum Tab {
         case songs, profile
     }
-    
-    let songCoordinator: SongCoordinator?
-    
+        
     var body: some View {
+        
         TabView {
-            SongsUIView(coordinator: songCoordinator)
+            SongsUIView()
                 .tabItem {
                     Label("Songs", systemImage: "music.note")
                 }.tag(Tab.songs)
@@ -35,7 +34,7 @@ struct AppTabView: View {
 }
 
 #Preview {
-    AppTabView(songCoordinator: nil)
+    AppTabView()
         .preferredColorScheme(.dark)
 }
 

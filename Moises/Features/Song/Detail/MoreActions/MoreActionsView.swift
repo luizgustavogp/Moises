@@ -23,7 +23,7 @@ struct MoreActionsView: View {
             .multilineTextAlignment(.center)
 
             DSMIconButton(
-                icon: .asset(name: "ic-playlist"),
+                icon: .asset(name: "playlist"),
                 title: "Open album",
                 action: onOpenAlbum
             )

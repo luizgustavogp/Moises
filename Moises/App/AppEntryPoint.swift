@@ -14,7 +14,7 @@ struct AppEntryPoint: App {
     
     var body: some Scene {
         WindowGroup {
-            AppContainerView()
+            AppTabView()
                 .preferredColorScheme(themeManager.colorScheme)
                 .environmentObject(themeManager)
                 .ignoresSafeArea()

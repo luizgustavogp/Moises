@@ -2,11 +2,19 @@
 //  SongDetailViewModel.swift
 //  Moises
 //
-//  Created by Gustavo Guimarães on 11/06/25.
+//  Created by Gustavo Guimarães on 14/06/25.
 //
 
-import Combine
+import Foundation
+import SwiftUI
 
-final class SongDetailViewModel : ObservableObject {
+final class SongDetailViewModel: ObservableObject {
     
+    @Published var showActionsSheet = false
+    @Published var showAlbumSheet = false
+
+    func handleOpenAlbum() {
+        showActionsSheet = false
+        showAlbumSheet = true
+    }
 }
