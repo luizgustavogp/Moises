@@ -16,7 +16,7 @@ struct DSMSubtitle: View {
     var body: some View {
         Text(text)
             .font(DSMFont.sfProDisplay(size: fontSize, weight: fontWeight))
-            .foregroundColor(.dsmSecondaryText)
+            .foregroundColor(.secondaryText)
             .frame(maxWidth: .infinity, alignment: alignment)
     }
 }

@@ -15,7 +15,7 @@ enum DSMIcon {
 struct DSMImage: View {
     let icon: DSMIcon
     var size: CGFloat = DSMSize.Icon.medium
-    var color: Color = .dsmPrimary
+    var color: Color = .customPrimary
 
     var body: some View {
         iconView

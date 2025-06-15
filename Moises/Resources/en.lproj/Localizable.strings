@@ -1,0 +1,21 @@
+/* Songs list screen */
+"songs_title" = "Songs";
+"search_prompt" = "Search";
+"empty_state_title" = "It looks empty around here";
+"empty_state_subtitle" = "Try changing your search";
+"error_generic" = "Something went wrong";
+
+/* Song details screen */
+"open_album" = "Open Album";
+
+/* Profile */
+"profile_title" = "Profile";
+"profile_appearance" = "Appearance";
+"profile_theme" = "Theme";
+"profile_language" = "Language";
+"language_english" = "English";
+"language_portuguese" = "Portuguese";
+
+/* Tab */
+"tab_songs" = "Songs";
+"tab_profile" = "Profile";

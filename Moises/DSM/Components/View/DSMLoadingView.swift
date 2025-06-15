@@ -13,7 +13,7 @@ struct DSMLoadingView: View {
             Color.clear
             
             ProgressView()
-                .progressViewStyle(CircularProgressViewStyle(tint: Color.dsmPrimary))
+                .progressViewStyle(CircularProgressViewStyle(tint: .customPrimary))
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

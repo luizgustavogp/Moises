@@ -10,7 +10,7 @@ import SwiftUI
 struct SongDetailView: View {
     let song: Song
 
-    @StateObject private var viewModel = SongDetailViewModel()
+    @StateObject var viewModel: SongDetailViewModel
 
     var body: some View {
         VStack(spacing: DSMSize.Spacing.md) {
@@ -53,16 +53,18 @@ struct SongDetailView: View {
                     viewModel.handleOpenAlbum()
                 }
             )
-            .presentationDetents([.fraction(0.25), .fraction(0.3)])
+            .presentationDetents([.fraction(0.25)])
+            .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $viewModel.showAlbumSheet) {
-            AlbumsUIView(song: song)
-                .presentationDetents([.fraction(1), .large])
+            AlbumsUIView(song: song, viewModel: AlbumViewModel())
+                .presentationDetents([.large])
+                .presentationDragIndicator(.visible)
         }
     }
 }
 
 
 #Preview {
-    SongDetailView(song: Song.preview)
+    SongDetailView(song: Song.preview, viewModel: SongDetailViewModel())
 }

@@ -14,9 +14,9 @@ struct ListItemRowView: View {
     
     var body: some View {
         HStack(spacing: DSMSize.Spacing.md) {
-            DSMAsyncImage(url: URL(string: imageUrl))
+            DSMAsyncImage(url: imageUrl.toURL())
             
-            VStack(alignment: .leading, spacing: 4) {
+            VStack(alignment: .leading, spacing: DSMSize.Spacing.xs) {
                 DSMTitle(text: title, fontSize: .medium)
                 
                 DSMSubtitle(text: subtitle)

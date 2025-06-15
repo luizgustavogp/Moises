@@ -11,7 +11,7 @@ struct AlbumsUIView: View {
     
     let song: Song
     
-    @StateObject private var viewModel = AlbumViewModel()
+    @StateObject var viewModel: AlbumViewModel
     
     var body: some View {
         VStack(alignment: .leading, spacing: DSMSize.Spacing.md) {
@@ -35,7 +35,7 @@ struct AlbumsUIView: View {
         .padding(.top, DSMSize.Spacing.lg)
         .padding(.horizontal, DSMSize.Spacing.md)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .background(Color.dsmBackground.ignoresSafeArea())
+        .background(Color.customBackground.ignoresSafeArea())
         .onAppear {
             viewModel.loadSongs(for: song.collectionId)
         }
@@ -43,5 +43,5 @@ struct AlbumsUIView: View {
 }
 
 #Preview {
-    AlbumsUIView(song: Song.preview)
+    AlbumsUIView(song: Song.preview, viewModel: AlbumViewModel())
 }

@@ -10,26 +10,27 @@ import SwiftUI
 struct AppTabView: View {
     @State private var selectedTab: Tab = .songs
     
-    enum Tab {
-        case songs, profile
+    enum Tab: String, CaseIterable, LocalizableKey {
+        case songs = "tab_songs"
+        case profile = "tab_profile"
     }
-        
+    
     var body: some View {
-        
-        TabView {
-            SongsUIView()
+        TabView(selection: $selectedTab) {
+            SongsUIView(viewModel: SongsViewModel())
                 .tabItem {
-                    Label("Songs", systemImage: "music.note")
-                }.tag(Tab.songs)
-            
+                    Label(Tab.songs.localized, systemImage: "music.note")
+                }
+                .tag(Tab.songs)
             
             ProfileUIView()
                 .tabItem {
-                    Label("Profile", systemImage: "person")
-                }.tag(Tab.profile)
+                    Label(Tab.profile.localized, systemImage: "person")
+                }
+                .tag(Tab.profile)
         }
-        .tint(.dsmTabBarActive)
-        .foregroundColor(.dsmBackground)
+        .tint(.tabBarActive)
+        .foregroundColor(.customBackground)
     }
 }
 

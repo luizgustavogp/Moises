@@ -9,19 +9,20 @@ import SwiftUI
 
 struct SongsUIView: View {
     
-    @StateObject private var viewModel = SongsViewModel()
+    @StateObject var viewModel: SongsViewModel
+    
     @State private var path = NavigationPath()
     
     var body: some View {
-        NavigationStack (path: $path) {
+        NavigationStack(path: $path) {
             
-            DSMErrorView(text: "Something went wrong")
+            DSMErrorView(text: SongsStrings.errorGeneric.localized)
                 .isHidden(viewModel.shouldShowErrorView == false, remove: true)
             
             DSMEmptyStateView(
                 icon: .system(name: "music.note.list"),
-                title: "It looks empty around here",
-                subtitle: "Try changing your search"
+                title: SongsStrings.emptyStateTitle.localized,
+                subtitle: SongsStrings.emptyStateSubtitle.localized
             )
             .isHidden(viewModel.shouldShowEmptyState == false, remove: true)
             
@@ -45,23 +46,22 @@ struct SongsUIView: View {
                         }
                     }
                 }
-                .searchable(text: $viewModel.searchTerm, prompt: "Search")
-                .foregroundColor(Color.dsmPrimary)
+                .searchable(text: $viewModel.searchTerm, prompt: SongsStrings.searchPrompt.localized)
+                .foregroundColor(Color.customPrimary)
                 .refreshable {
                     viewModel.refresh()
                 }
             }
             .padding(.horizontal, DSMSize.Spacing.md)
-            .background(Color.dsmBackground)
-            .navigationTitle("Songs")
+            .background(Color.customBackground)
+            .navigationTitle(SongsStrings.title.localized)
             .navigationDestination(for: Song.self) { song in
-                SongDetailView(song: song)
+                SongDetailView(song: song, viewModel: SongDetailViewModel())
             }
         }
     }
 }
 
-
 #Preview {
-    SongsUIView()
+    SongsUIView(viewModel: SongsViewModel())
 }

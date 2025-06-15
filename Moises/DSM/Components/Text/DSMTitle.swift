@@ -16,7 +16,7 @@ struct DSMTitle: View {
     var body: some View {
         Text(text)
             .font(DSMFont.sfProDisplay(size: fontSize, weight: fontWeight))
-            .foregroundColor(.dsmOnSurface)
+            .foregroundColor(.onSurface)
             .frame(maxWidth: .infinity, alignment: alignment)
     }
 }

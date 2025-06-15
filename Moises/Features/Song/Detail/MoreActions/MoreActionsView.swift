@@ -24,7 +24,7 @@ struct MoreActionsView: View {
 
             DSMIconButton(
                 icon: .asset(name: "playlist"),
-                title: "Open album",
+                title: MoreActionsStrings.openAlbum.localized,
                 action: onOpenAlbum
             )
             .padding(.top, DSMSize.Spacing.xl)

@@ -8,13 +8,14 @@
 import SwiftUI
 
 struct ProfileUIView: View {
-    
+
     @EnvironmentObject var themeManager: AppThemeManager
+    @AppStorage("appLanguage") private var selectedLanguage = Locale.current.language.languageCode?.identifier ?? "en"
 
     var body: some View {
         Form {
-            Section(header: Text("Appearance")) {
-                Picker("Theme", selection: $themeManager.selectedThemeRaw) {
+            Section(header: DSMTitle(text: ProfileStrings.appearance.localized)) {
+                Picker(ProfileStrings.theme.localized, selection: $themeManager.selectedThemeRaw) {
                     ForEach(DSMThemeMode.allCases) { mode in
                         Text(mode.description).tag(mode.rawValue)
                     }
@@ -22,7 +23,6 @@ struct ProfileUIView: View {
                 .pickerStyle(SegmentedPickerStyle())
             }
         }
-        .navigationTitle("Profile")
+        .navigationTitle(ProfileStrings.title.localized)
     }
 }
-
