@@ -9,7 +9,7 @@ import SwiftUI
 
 struct MoreActionsView: View {
     
-    let song: Song    
+    let song: SongModel
     let onOpenAlbum: () -> Void
 
     var body: some View {
@@ -35,5 +35,5 @@ struct MoreActionsView: View {
 
 
 #Preview {
-    MoreActionsView(song: Song.preview, onOpenAlbum: {})
+    MoreActionsView(song: SongModel.preview, onOpenAlbum: {})
 }

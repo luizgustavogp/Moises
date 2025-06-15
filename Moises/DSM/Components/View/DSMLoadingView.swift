@@ -9,13 +9,9 @@ import SwiftUI
 
 struct DSMLoadingView: View {
     var body: some View {
-        ZStack {
-            Color.clear
-            
-            ProgressView()
-                .progressViewStyle(CircularProgressViewStyle(tint: .customPrimary))
-        }
-        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        ProgressView()
+            .background(Color.clear)
+            .progressViewStyle(CircularProgressViewStyle(tint: .customPrimary))        
     }
 }
 

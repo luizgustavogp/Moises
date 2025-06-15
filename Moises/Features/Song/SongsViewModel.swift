@@ -12,7 +12,7 @@ import Foundation
 final class SongsViewModel: ObservableObject {
     
     @Published var searchTerm: String = ""
-    @Published private(set) var songs: [Song] = []
+    @Published private(set) var songs: [SongModel] = []
     @Published private(set) var state = ViewState.idle
     
     private var page = 0
@@ -32,11 +32,9 @@ final class SongsViewModel: ObservableObject {
         songs.isEmpty && state == .finished
     }
     
-    init(searchTerm: String = "",
-         pageLimit: Int = 30,
+    init(pageLimit: Int = 30,
          repository: SongsRepository = RemoteSongsRepository()) {
         
-        self.searchTerm = searchTerm
         self.pageLimit = pageLimit
         self.repository = repository
         
@@ -66,42 +64,33 @@ final class SongsViewModel: ObservableObject {
         songs = []
     }
     
-    // MARK: Public  methods
-    func loadNextPage(term: String) async {
+    private func loadNextPage(term: String) async {
         guard !term.isEmpty, state == .idle else { return }
         
         state = .loading
         
         do {
             let offset = page * pageLimit
-            let newSongs = try await repository.searchSongs(term: term, offset: offset, limit: pageLimit)
-            
-            // Remove duplicated items based on trackId
-            let uniqueNewSongs = newSongs.filter { newSong in
-                !songs.contains(where: { $0.trackId == newSong.trackId })
-            }
+            let newSongs = try await repository.searchSongs(term: term, offset: offset, limit: pageLimit).toModelList()
             
             page += 1
-            songs.append(contentsOf: uniqueNewSongs)
-            state = uniqueNewSongs.isEmpty || uniqueNewSongs.count < pageLimit ? .finished : .idle
+            songs.append(contentsOf: newSongs)
+            state = newSongs.isEmpty || newSongs.count < pageLimit ? .finished : .idle
             
         } catch {
+            print(error)
             state = .error
         }
     }
     
-    func loadNextPageIfNeeded(currentSong: Song) {
+    // MARK: Public  methods
+    func loadNextPageIfNeeded(currentSong: SongModel) async {
         guard currentSong.trackId == songs.last?.trackId else { return }
-        
-        Task {
-            await loadNextPage(term: searchTerm)
-        }
+        await loadNextPage(term: searchTerm)
     }
     
-    func refresh() {
+    func refresh() async {
         reset()
-        Task {
-            await loadNextPage(term: searchTerm)
-        }
+        await loadNextPage(term: searchTerm)
     }
 }

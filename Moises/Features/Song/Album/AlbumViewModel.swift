@@ -9,10 +9,14 @@ import Foundation
 
 final class AlbumViewModel: ObservableObject {
     
-    @Published private(set) var songs: [Song] = []
+    @Published private(set) var songs: [SongModel] = []
     @Published private(set) var state = ViewState.idle
 
     private let repository: AlbumRepository
+    
+    var shouldShowLoadingView: Bool {
+        state == .loading
+    }
 
     init(repository: AlbumRepository = RemoteAlbumRepository()) {
         self.repository = repository
@@ -23,7 +27,7 @@ final class AlbumViewModel: ObservableObject {
         Task {
             do {
                 state = .loading
-                songs = try await repository.lookupSongsByAlbum(collectionId: collectionId).filter {$0.kind == "song"}
+                songs = try await repository.lookupSongsByAlbum(collectionId: collectionId).filter {$0.kind == "song"}.toModelList()
                 state = .finished
             } catch {
                 state = .error

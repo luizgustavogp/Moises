@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SongDetailView: View {
-    let song: Song
+    let song: SongModel
 
     @StateObject var viewModel: SongDetailViewModel
 
@@ -53,7 +53,7 @@ struct SongDetailView: View {
                     viewModel.handleOpenAlbum()
                 }
             )
-            .presentationDetents([.fraction(0.25)])
+            .presentationDetents([.fraction(0.3)])
             .presentationDragIndicator(.visible)
         }
         .sheet(isPresented: $viewModel.showAlbumSheet) {
@@ -66,5 +66,5 @@ struct SongDetailView: View {
 
 
 #Preview {
-    SongDetailView(song: Song.preview, viewModel: SongDetailViewModel())
+    SongDetailView(song: SongModel.preview, viewModel: SongDetailViewModel())
 }

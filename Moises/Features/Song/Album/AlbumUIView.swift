@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AlbumsUIView: View {
     
-    let song: Song
+    let song: SongModel
     
     @StateObject var viewModel: AlbumViewModel
     
@@ -32,6 +32,7 @@ struct AlbumsUIView: View {
                 }
             }
         }
+        .scrollIndicators(.hidden)
         .padding(.top, DSMSize.Spacing.lg)
         .padding(.horizontal, DSMSize.Spacing.md)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -39,9 +40,13 @@ struct AlbumsUIView: View {
         .onAppear {
             viewModel.loadSongs(for: song.collectionId)
         }
+        .overlay {
+            DSMLoadingView()
+                .isHidden(viewModel.shouldShowLoadingView == false, remove: true)
+        }
     }
 }
 
 #Preview {
-    AlbumsUIView(song: Song.preview, viewModel: AlbumViewModel())
+    AlbumsUIView(song: SongModel.preview, viewModel: AlbumViewModel())
 }
