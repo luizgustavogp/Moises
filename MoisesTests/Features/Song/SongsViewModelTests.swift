@@ -5,56 +5,86 @@
 //  Created by Gustavo Guimarães on 13/06/25.
 //
 
+import Foundation
 import Testing
 @testable import Moises
 
+
 @MainActor
 struct SongsViewModelTests {
-    @Test func testInitialState() throws {
-        let viewModel = SongsViewModel(pageLimit: 5, repository: MockSongsRepository())
-        #expect(viewModel.state == .idle)
-        #expect(viewModel.songs.isEmpty)
-        #expect(viewModel.shouldShowEmptyState == false)
+    
+    @Test
+    func testInitialState() throws {
+        // Arrange
+        let sut = SongsViewModel(pageLimit: 5, repository: MockSongsRepository())
+        
+        // Assert
+        #expect(sut.state == .idle)
+        #expect(sut.songs.isEmpty)
+        #expect(sut.shouldShowEmptyState == false)
     }
-
-    @Test func testLoadNextPageAppendsSongs() async throws {
-        let viewModel = SongsViewModel(pageLimit: 5, repository: MockSongsRepository())
-        viewModel.refresh()
-
-        #expect(viewModel.songs.count == 0)
-        #expect(viewModel.state == .idle)
+    
+    @Test
+    func testLoadNextPageAppendsSongs() async throws {
+        // Arrange
+        let searchTerm = "rock"
+        let sut = SongsViewModel(searchTerm: searchTerm, pageLimit: 5, repository: MockSongsRepository())
+        
+        // Act
+        await sut.loadNextPage(term: searchTerm)
+        
+        // Assert
+        #expect(sut.songs.count == 5)
+        #expect(sut.state == .idle || sut.state == .finished)
     }
-
-    @Test func testPagination() async throws {
-        let viewModel = SongsViewModel(pageLimit: 3, repository: MockSongsRepository())
-        #expect(viewModel.songs.count == 3)
-
-        //viewModel.loadNextPageIfNeeded(currentSong: viewModel.songs.last)
-        #expect(viewModel.songs.count == 6)
+    
+    @Test
+    func testPagination() async throws {
+        // Arrange
+        let searchTerm = "rock"
+        let sut = SongsViewModel(searchTerm: searchTerm, pageLimit: 3, repository: MockSongsRepository())
+        
+        // Act
+        await sut.loadNextPage(term: searchTerm)
+        sut.loadNextPageIfNeeded(currentSong: sut.songs.last!)
+        
+        // Assert
+        #expect(sut.songs.count == 6)
     }
-
-    @Test func testEmptyStateVisibility() async throws {
-        let viewModel = SongsViewModel(pageLimit: 5, repository: MockEmptySongsRepository())
-        viewModel.refresh()
-        #expect(viewModel.shouldShowEmptyState)
+    
+    @Test
+    func testEmptyStateVisibility() async throws {
+        // Arrange
+        let sut = SongsViewModel(pageLimit: 5, repository: MockEmptySongsRepository())
+        
+        // Act
+        await sut.loadNextPage(term: "empty")
+        
+        // Assert
+        #expect(sut.shouldShowEmptyState)
     }
-
-//    @Test func testErrorStateVisibility() async throws {
-//        let viewModel = SongsViewModel(pageLimit: 5, repository: MockFailingSongsRepository())
-//        await viewModel.refresh()
-//        try #expect(viewModel.shouldShowErrorView)
-//    }
+    
+    @Test
+    func testErrorStateVisibility() async throws {
+        // Arrange
+        let sut = SongsViewModel(pageLimit: 5, repository: MockFailingSongsRepository())
+        
+        // Act
+        await sut.loadNextPage(term: "fail")
+        
+        // Assert
+        #expect(sut.shouldShowErrorView)
+    }
 }
+
 
 // MARK: - Mocks
-
 struct MockSongsRepository: SongsRepository {
     func searchSongs(term: String, offset: Int, limit: Int) async throws -> [Song] {
-        (0..<limit).map { index in
-            Song.preview
-        }
+        (0..<limit).map { _ in Song.preview }
     }
 }
+
 
 struct MockEmptySongsRepository: SongsRepository {
     func searchSongs(term: String, offset: Int, limit: Int) async throws -> [Song] {
@@ -62,8 +92,9 @@ struct MockEmptySongsRepository: SongsRepository {
     }
 }
 
-//struct MockFailingSongsRepository: SongsRepository {
-//    func searchSongs(term: String, offset: Int, limit: Int) async throws -> [Song] {
-//        throw URLError(.badServerResponse)
-//    }
-//}
+struct MockFailingSongsRepository: SongsRepository {
+    func searchSongs(term: String, offset: Int, limit: Int) async throws -> [Song] {
+        throw NSError(domain: "Test", code: 1, userInfo: nil)
+    }
+}
+

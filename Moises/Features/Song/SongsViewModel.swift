@@ -27,21 +27,23 @@ final class SongsViewModel: ObservableObject {
     var shouldShowLoadingView: Bool {
         state == .loading
     }
-
+    
     var shouldShowEmptyState: Bool {
-        songs.isEmpty && state != .loading && state != .error && state != .idle
+        songs.isEmpty && state == .finished
     }
     
-    init(pageLimit: Int = 30,
+    init(searchTerm: String = "",
+         pageLimit: Int = 30,
          repository: SongsRepository = RemoteSongsRepository()) {
         
+        self.searchTerm = searchTerm
         self.pageLimit = pageLimit
         self.repository = repository
         
         initSearchTerm()
     }
     
-    //MARK: Private methods
+    // MARK: Private methods
     private func initSearchTerm() {
         $searchTerm
             .debounce(for: .milliseconds(1000), scheduler: RunLoop.main)
@@ -64,29 +66,30 @@ final class SongsViewModel: ObservableObject {
         songs = []
     }
     
-    private func loadNextPage(term: String) async {
+    // MARK: Public  methods
+    func loadNextPage(term: String) async {
         guard !term.isEmpty, state == .idle else { return }
-
+        
         state = .loading
         
         do {
             let offset = page * pageLimit
             let newSongs = try await repository.searchSongs(term: term, offset: offset, limit: pageLimit)
-
+            
             // Remove duplicated items based on trackId
             let uniqueNewSongs = newSongs.filter { newSong in
                 !songs.contains(where: { $0.trackId == newSong.trackId })
             }
-
+            
             page += 1
             songs.append(contentsOf: uniqueNewSongs)
             state = uniqueNewSongs.isEmpty || uniqueNewSongs.count < pageLimit ? .finished : .idle
+            
         } catch {
             state = .error
         }
     }
     
-    //MARK: Public  methods
     func loadNextPageIfNeeded(currentSong: Song) {
         guard currentSong.trackId == songs.last?.trackId else { return }
         
