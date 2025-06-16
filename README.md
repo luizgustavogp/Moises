@@ -36,13 +36,12 @@ Aplicativo iOS desenvolvido em **Swift 6** que permite buscar músicas utilizand
 - [`Kingfisher`](https://github.com/onevcat/Kingfisher) – Para carregamento e cache de imagens  
 - [`ViewInspector`](https://github.com/nalexn/ViewInspector) – Para inspeção de Views em testes unitários SwiftUI
 
-> As bibliotecas foram escolhidas com foco em simplicidade, produtividade e testabilidade.
-
----
-
 ## 📽️ Demonstração
 
-👉 [Assista ao vídeo de demonstração](#) *(inserir link aqui)*
+
+<video src="https://github.com/user-attachments/assets/1cbcf1b7-06e6-4955-8e9a-f5d61cf1fb08" controls width="600"></video>
+<video src="https://github.com/user-attachments/assets/30d67007-4c6e-455a-bbab-b26d032773c4" controls width="600"></video>
+<video src="https://github.com/user-attachments/assets/9baf8326-f7fd-4705-abdf-2738565a8a1f" controls width="600"></video>
 
 ---
 
