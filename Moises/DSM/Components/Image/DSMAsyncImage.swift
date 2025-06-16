@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct DSMAsyncImage: View {
     let url: URL?
@@ -14,20 +15,18 @@ struct DSMAsyncImage: View {
     var cornerRadius: CGFloat = DSMSize.CornerRadius.small
     var fallbackIcon: DSMIcon = .system(name: "music.note")
 
+    @State private var didFail = false
+
     var body: some View {
-        AsyncImage(url: url) { phase in
-            switch phase {
-            case .empty:
-                DSMImage(icon: fallbackIcon)
-            case .success(let image):
-                image
+        ZStack {
+            if let url, !didFail {
+                KFImage(url)
+                    .onFailure { _ in didFail = true }
                     .resizable()
                     .scaledToFill()
-
-            case .failure:
+            } else {
                 DSMImage(icon: fallbackIcon)
-            @unknown default:
-                DSMImage(icon: fallbackIcon)
+                    .frame(width: width, height: height)
             }
         }
         .frame(width: width, height: height)

@@ -1,0 +1,6 @@
+framework module Pods_Moises {
+  umbrella header "Pods-Moises-umbrella.h"
+
+  export *
+  module * { export * }
+}

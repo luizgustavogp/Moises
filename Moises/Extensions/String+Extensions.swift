@@ -14,6 +14,11 @@ extension Optional where Wrapped == String {
 
 extension String {
     func toURL() -> URL? {
-        URL(string: self)
+        guard let url = URL(string: self),
+              let components = URLComponents(url: url, resolvingAgainstBaseURL: false),
+              components.scheme != nil || components.host != nil else {
+            return nil
+        }
+        return url
     }
 }

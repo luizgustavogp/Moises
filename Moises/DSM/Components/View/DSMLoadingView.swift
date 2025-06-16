@@ -11,7 +11,8 @@ struct DSMLoadingView: View {
     var body: some View {
         ProgressView()
             .background(Color.clear)
-            .progressViewStyle(CircularProgressViewStyle(tint: .customPrimary))        
+            .scaleEffect(1.5)
+            .progressViewStyle(CircularProgressViewStyle(tint: .customPrimary))
     }
 }
 

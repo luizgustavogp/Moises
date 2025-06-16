@@ -18,6 +18,7 @@ final class SongsViewModel: ObservableObject {
     private var page = 0
     private let pageLimit: Int
     private let repository: SongsRepository
+    private let debounceFor: RunLoop.SchedulerTimeType.Stride
     private var cancellables = Set<AnyCancellable>()
     
     var shouldShowErrorView: Bool {
@@ -33,9 +34,11 @@ final class SongsViewModel: ObservableObject {
     }
     
     init(pageLimit: Int = 30,
+         debounceFor: RunLoop.SchedulerTimeType.Stride = .milliseconds(1000),
          repository: SongsRepository = RemoteSongsRepository()) {
         
         self.pageLimit = pageLimit
+        self.debounceFor = debounceFor
         self.repository = repository
         
         initSearchTerm()
@@ -44,14 +47,14 @@ final class SongsViewModel: ObservableObject {
     // MARK: Private methods
     private func initSearchTerm() {
         $searchTerm
-            .debounce(for: .milliseconds(1000), scheduler: RunLoop.main)
+            .dropFirst()
+            .debounce(for: debounceFor, scheduler: RunLoop.main)
             .removeDuplicates()
             .sink { [weak self] term in
                 guard let self = self else { return }
                 
                 Task {
-                    self.state = .idle
-                    self.songs = []
+                    self.reset()
                     await self.loadNextPage(term: term)
                 }
             }
@@ -78,18 +81,19 @@ final class SongsViewModel: ObservableObject {
             state = newSongs.isEmpty || newSongs.count < pageLimit ? .finished : .idle
             
         } catch {
-            print(error)
             state = .error
         }
     }
     
     // MARK: Public  methods
+    
     func loadNextPageIfNeeded(currentSong: SongModel) async {
         guard currentSong.trackId == songs.last?.trackId else { return }
         await loadNextPage(term: searchTerm)
     }
     
     func refresh() async {
+        guard state != .loading else { return }
         reset()
         await loadNextPage(term: searchTerm)
     }

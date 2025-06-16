@@ -27,7 +27,6 @@ struct SongsUIView: View {
             .isHidden(viewModel.shouldShowEmptyState == false, remove: true)
             
             ScrollView {
-                
                 LazyVStack(spacing: DSMSize.Spacing.md) {
                     ForEach(viewModel.songs) { song in
                         ListItemRowView(
@@ -39,19 +38,12 @@ struct SongsUIView: View {
                             path.append(song)
                         }
                         .onAppear {
-                            Task {
-                                await viewModel.loadNextPageIfNeeded(currentSong: song)
-                            }
+                            Task { await viewModel.loadNextPageIfNeeded(currentSong: song) }
                         }
                     }
                 }
                 .searchable(text: $viewModel.searchTerm, prompt: SongsStrings.searchPrompt.localized)
                 .foregroundColor(Color.customPrimary)
-                .refreshable {
-                    Task {
-                        await viewModel.refresh()
-                    }
-                }
             }
             .scrollIndicators(.hidden)
             .background(.customBackground)
@@ -59,7 +51,11 @@ struct SongsUIView: View {
             .navigationTitle(SongsStrings.title.localized)
             .navigationDestination(for: SongModel.self) { song in
                 SongDetailView(song: song, viewModel: SongDetailViewModel())
-            }.overlay {
+            }
+            .refreshable {
+                await viewModel.refresh()
+            }
+            .overlay {
                 DSMLoadingView()
                     .isHidden(viewModel.shouldShowLoadingView == false, remove: true)
             }

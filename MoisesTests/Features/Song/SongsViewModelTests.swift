@@ -7,53 +7,50 @@
 
 import Combine
 import Foundation
-import XCTest
+import Testing
 @testable import Moises
 
 @MainActor
-final class SongsViewModelTests: XCTestCase {
+struct SongsViewModelTests {
     
+    @Test
     func testInitialState() throws {
         // Arrange
-        let sut = SongsViewModel(pageLimit: 5, repository: MockSongsRepository())
+        let sut = SongsViewModel(pageLimit: 5, debounceFor: .zero, repository: MockSongsRepository())
         
         // Assert
-        XCTAssertEqual(sut.state, .idle)
-        XCTAssertTrue(sut.songs.isEmpty)
-        XCTAssertFalse(sut.shouldShowEmptyState)
+        #expect(sut.state == .idle)
+        #expect(sut.songs.isEmpty)
+        #expect(sut.shouldShowEmptyState == false)
     }
     
+    @Test
     func testLoadNextPageAppendsSongs() async throws {
         // Arrange
-        let expectation = XCTestExpectation(description: "Songs loaded")
-        let sut = SongsViewModel(pageLimit: 5, repository: MockSongsRepository())
+        let sut = SongsViewModel(pageLimit: 5, debounceFor: .zero, repository: MockSongsRepository())
         
         // Act
         sut.searchTerm = "Rock"
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.1) {
-            // Assert
-            XCTAssertEqual(sut.songs.count, 5)
-            XCTAssertEqual(sut.state, .idle)
-            expectation.fulfill()
-        }
-
-        await fulfillment(of: [expectation], timeout: 2.0)
+        // Assert
+        #expect(sut.songs.count == 5)
+        #expect(sut.state == .idle)
     }
     
+    @Test
     func testPagination() async throws {
         // Arrange
-        let sut = SongsViewModel(pageLimit: 3, repository: MockSongsRepository())
+        let sut = SongsViewModel(pageLimit: 3, debounceFor: .zero, repository: MockSongsRepository())
         
         // Act
         sut.searchTerm = "Rock"
-        try await Task.sleep(nanoseconds: 1_100_000_000)
-        sut.loadNextPageIfNeeded(currentSong: sut.songs.last ?? Song.preview)
-        try await Task.sleep(nanoseconds: 1_100_000_000)
+        await sut.loadNextPageIfNeeded(currentSong: sut.songs.last ?? SongModel.preview)
         
-        XCTAssertEqual(sut.songs.count, 6)
+        // Assert
+        #expect(sut.songs.count == 6)
     }
     
+    @Test
     func testEmptyStateVisibility() async throws {
         // Arrange
         let sut = SongsViewModel(pageLimit: 5, repository: MockEmptySongsRepository())
@@ -62,50 +59,18 @@ final class SongsViewModelTests: XCTestCase {
         sut.searchTerm = "Rock"
         
         // Assert
-        XCTAssertTrue(sut.shouldShowEmptyState)
+        #expect(sut.shouldShowEmptyState)
     }
     
+    @Test
     func testErrorStateVisibility() async throws {
         // Arrange
         let sut = SongsViewModel(pageLimit: 5, repository: MockFailingSongsRepository())
         
         // Act
         sut.searchTerm = "Rock"
-        try await Task.sleep(nanoseconds: 1_100_000_000) // debounce delay
         
         // Assert
-        XCTAssertTrue(sut.shouldShowErrorView)
+        #expect(sut.shouldShowErrorView)
     }
 }
-
-
-// MARK: - Mocks
-struct MockSongsRepository: SongsRepository {
-    func searchSongs(term: String, offset: Int, limit: Int) async throws -> [Song] {
-        (0..<limit).map { index in
-            return Song(
-                trackId: abs(UUID().hashValue),
-                artistName: "Rock \(index)",
-                trackName: "Legal \(index)",
-                artworkUrl100: "",
-                collectionId: 1,
-                collectionName: "Greatest Hits",
-                trackTimeMillis: 1_000_000,
-                kind: "song")
-        }
-    }
-}
-
-
-struct MockEmptySongsRepository: SongsRepository {
-    func searchSongs(term: String, offset: Int, limit: Int) async throws -> [Song] {
-        []
-    }
-}
-
-struct MockFailingSongsRepository: SongsRepository {
-    func searchSongs(term: String, offset: Int, limit: Int) async throws -> [Song] {
-        throw NSError(domain: "Test", code: 1, userInfo: nil)
-    }
-}
-
