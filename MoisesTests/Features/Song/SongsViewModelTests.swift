@@ -13,8 +13,6 @@ final class SongsViewModelTests: XCTestCase {
     
     // MARK: - Helpers
     
-    private let shortDelay: TimeInterval = 0.1
-    
     func after(_ delay: TimeInterval = 0.1, fulfill expectation: XCTestExpectation? = nil, _ block: @escaping () -> Void) {
         DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
             block()
@@ -126,4 +124,24 @@ final class SongsViewModelTests: XCTestCase {
         
         wait(for: [expectation], timeout: 1)
     }
+    
+    func testRefreshClearsSongsAndReloads() {
+        let expectation = expectation(description: "Refresh should reload songs")
+        let sut = makeSUT(repository: MockSongsRepository(itemCount: 2))
+
+        sut.searchTerm = "Rock"
+        
+        after {
+            Task {
+                await sut.refresh()
+                self.after(fulfill: expectation) {
+                    XCTAssertEqual(sut.songs.count, 2)
+                    XCTAssertEqual(sut.state, .finished)
+                }
+            }
+        }
+
+        wait(for: [expectation], timeout: 1)
+    }
+
 }
