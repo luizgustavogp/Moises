@@ -9,8 +9,14 @@ import Foundation
 @testable import Moises
 
 final class MockSongsRepository: SongsRepository {
+    let itemCount: Int
+    
+    init(itemCount: Int = 3) {
+        self.itemCount = itemCount
+    }
+    
     func searchSongs(term: String, offset: Int, limit: Int) async throws -> [Song] {
-        (0..<limit).map { index in
+        (0..<itemCount).map { index in
             return Song(
                 trackId: abs(UUID().hashValue),
                 artistName: "Rock \(index)",
