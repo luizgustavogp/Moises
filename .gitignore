@@ -1,0 +1,27 @@
+# Xcode
+build/
+DerivedData/
+*.xcworkspace
+*.xcuserstate
+*.xcuserdata
+*.xcodeproj/project.xcworkspace/
+*.xcodeproj/xcuserdata/
+
+# SwiftPM
+.swiftpm/
+.build/
+
+# CocoaPods
+Pods/
+
+# SPM artifacts
+*.framework
+*.xcframework
+
+# User settings
+*.DS_Store
+*.env
+*.log
+*.swp
+
+

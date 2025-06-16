@@ -1,6 +1,0 @@
-framework module Pods_MoisesTests {
-  umbrella header "Pods-MoisesTests-umbrella.h"
-
-  export *
-  module * { export * }
-}
