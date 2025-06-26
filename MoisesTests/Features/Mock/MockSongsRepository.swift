@@ -25,7 +25,8 @@ final class MockSongsRepository: SongsRepository {
                 collectionId: 1,
                 collectionName: "Brazilian rock",
                 trackTimeMillis: 100,
-                kind: "song")
+                kind: "song",
+                previewUrl: "")
         }
     }
 }

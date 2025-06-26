@@ -1,5 +1,5 @@
 //
-//  DSMMiniPlayer.swift
+//  DSMMiniPlayerControl.swift
 //  Moises
 //
 //  Created by Gustavo Guimarães on 11/06/25.
@@ -7,8 +7,8 @@
 
 import SwiftUI
 
-struct DSMMiniPlayer: View {
-    @ObservedObject var viewModel: MiniPlayerViewModel
+struct DSMMiniPlayerControl: View {
+    @ObservedObject var viewModel: DSMMiniPlayerControlViewModel
     
     var onPlayPauseTapped: () -> Void
     var onSkipForward: () -> Void
@@ -17,13 +17,20 @@ struct DSMMiniPlayer: View {
     var body: some View {
         VStack(spacing: DSMSize.Spacing.xs) {
             
-            Slider(value: $viewModel.progress, in: 0...1)
-                .accentColor(.customPrimary)
+            Slider(value: $viewModel.progress, in: 0...1, onEditingChanged: { editing in
+                viewModel.isSeeking = editing
+            })
+            .onChange(of: viewModel.progress) { _ in
+                if viewModel.isSeeking {
+                    viewModel.seek()
+                }
+            }
+            .accentColor(.customPrimary)
             
             HStack {
                 DSMTitle(text: viewModel.currentTime, fontSize: .small)
                 Spacer()
-                DSMTitle(text: viewModel.remainingTime, alignment: .trailing, fontSize: .small)
+                DSMTitle(text: viewModel.totalTime, alignment: .trailing, fontSize: .small)
             }
             
             HStack(spacing: DSMSize.Spacing.xl) {
@@ -56,12 +63,15 @@ struct DSMMiniPlayer: View {
             .padding(.top, DSMSize.Spacing.sm)
         }
         .cornerRadius(DSMSize.CornerRadius.medium)
+        .onDisappear {
+            viewModel.stop()
+        }
     }
 }
 
 #Preview {
-    DSMMiniPlayer(
-        viewModel: MiniPlayerViewModel(trackTimeMillis: 210000),
+    DSMMiniPlayerControl(
+        viewModel: DSMMiniPlayerControlViewModel(playerService: DSMMiniAvPlayerService()),
         onPlayPauseTapped: {
             print("Play/Pause")
         },

@@ -35,7 +35,8 @@ struct SongArrayMappingTests {
                 collectionId: 100,
                 collectionName: "Album 1",
                 trackTimeMillis: 200_000,
-                kind: "song"
+                kind: "song",
+                previewUrl: ""
             ),
             Song(
                 trackId: 2,
@@ -45,7 +46,8 @@ struct SongArrayMappingTests {
                 collectionId: 200,
                 collectionName: "Album 2",
                 trackTimeMillis: 300_000,
-                kind: "song"
+                kind: "song",
+                previewUrl: ""
             )
         ]
         

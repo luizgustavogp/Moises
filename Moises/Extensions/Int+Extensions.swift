@@ -19,7 +19,7 @@ extension Int {
     }
     
     var asTimeString: String {
-        let totalSeconds = self / 1000
+        let totalSeconds = self
         let minutes = totalSeconds / 60
         let seconds = totalSeconds % 60
         return String(format: "%d:%02d", minutes, seconds)

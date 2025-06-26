@@ -11,6 +11,7 @@ struct SongDetailView: View {
     let song: SongModel
 
     @StateObject var viewModel: SongDetailViewModel
+    @StateObject var miniPlayerviewModel: DSMMiniPlayerControlViewModel
 
     var body: some View {
         VStack(spacing: DSMSize.Spacing.md) {
@@ -27,8 +28,8 @@ struct SongDetailView: View {
                     DSMSubtitle(text: song.artistName)
                 }
 
-                DSMMiniPlayer(
-                    viewModel: MiniPlayerViewModel(trackTimeMillis: song.trackTimeMillis.orZero),
+                DSMMiniPlayerControl(
+                    viewModel: miniPlayerviewModel,
                     onPlayPauseTapped: {},
                     onSkipForward: {},
                     onSkipBackward: {}
@@ -66,5 +67,5 @@ struct SongDetailView: View {
 
 
 #Preview {
-    SongDetailView(song: SongModel.preview, viewModel: SongDetailViewModel())
+    SongDetailView(song: SongModel.preview, viewModel: SongDetailViewModel(), miniPlayerviewModel: DSMMiniPlayerControlViewModel(playerService: DSMMiniAvPlayerService()))
 }

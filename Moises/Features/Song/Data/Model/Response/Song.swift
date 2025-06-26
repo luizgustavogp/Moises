@@ -16,4 +16,5 @@ struct Song: Decodable, Hashable {
     let collectionName: String?
     let trackTimeMillis: Int?
     let kind: String?
+    let previewUrl: String?
 }

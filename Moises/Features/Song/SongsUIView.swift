@@ -50,7 +50,9 @@ struct SongsUIView: View {
             .padding(.horizontal, DSMSize.Spacing.md)
             .navigationTitle(SongsStrings.title.localized)
             .navigationDestination(for: SongModel.self) { song in
-                SongDetailView(song: song, viewModel: SongDetailViewModel())
+                SongDetailView(song: song,
+                               viewModel: SongDetailViewModel(),
+                               miniPlayerviewModel: DSMMiniPlayerFactory.makeViewModel(for: song))
             }
             .refreshable {
                 await viewModel.refresh()

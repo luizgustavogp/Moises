@@ -82,6 +82,7 @@ final class SongsViewModel: ObservableObject {
             
         } catch {
             state = .error
+            print(error.localizedDescription)
         }
     }
     
