@@ -16,7 +16,7 @@ struct DSMImage: View {
     let icon: DSMIcon
     var size: CGFloat = DSMSize.Icon.medium
     var color: Color = .customPrimary
-
+    
     var body: some View {
         iconView
             .scaledToFit()
@@ -25,17 +25,16 @@ struct DSMImage: View {
     }
     
     @ViewBuilder
-        private var iconView: some View {
-            switch icon {
-            case .system(let name):
-                Image(systemName: name)
-                    .resizable()
-            case .asset(let name):
-                Image(name)
-                    .resizable()
-                    .frame(width: DSMSize.Icon.medium, height: DSMSize.Icon.medium)
-            }
+    private var iconView: some View {
+        switch icon {
+        case .system(let name):
+            Image(systemName: name)
+                .resizable()
+        case .asset(let name):
+            Image(name)
+                .resizable()
         }
+    }
 }
 #Preview {
     DSMImage(icon: .system(name: "person.circle"))

@@ -14,6 +14,7 @@ extension SongModel {
         self.collectionId = song.collectionId
         self.collectionName = song.collectionName
         self.trackTimeMillis = song.trackTimeMillis
+        self.previewUrl = song.previewUrl
     }
 }
 

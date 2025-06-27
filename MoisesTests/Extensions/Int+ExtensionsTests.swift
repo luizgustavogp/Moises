@@ -49,7 +49,7 @@ struct IntExtensionsTests {
     @Test
     func testAsTimeString() {
         // Arrange
-        let value = 125_000 // 2 min 5 sec
+        let value = 125 // 2 min 5 sec
         
         // Act
         let sut = value.asTimeString

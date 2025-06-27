@@ -22,11 +22,11 @@ struct DSMAsyncImage: View {
             if let url, !didFail {
                 KFImage(url)
                     .onFailure { _ in didFail = true }
+                    .retry(maxCount: 3)
                     .resizable()
                     .scaledToFill()
             } else {
                 DSMImage(icon: fallbackIcon)
-                    .frame(width: width, height: height)
             }
         }
         .frame(width: width, height: height)

@@ -16,6 +16,7 @@ struct SongModel: Identifiable, Hashable {
     let collectionId: Int
     let collectionName: String?
     let trackTimeMillis: Int?
+    let previewUrl: String?
 }
 
 extension SongModel {
@@ -26,6 +27,7 @@ extension SongModel {
         artworkUrl100: "",
         collectionId: 1,
         collectionName: "Greatest Hits",
-        trackTimeMillis: 1_000_000
+        trackTimeMillis: 1_000_000,
+        previewUrl: ""
     )
 }
