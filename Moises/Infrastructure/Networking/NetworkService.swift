@@ -8,5 +8,5 @@
 import Foundation
 
 protocol NetworkService: Sendable {
-    func request<T: Decodable>(_ url: URL) async throws -> T
+    func request<T: Decodable>(_ url: URL, retries: Int) async throws -> T
 }

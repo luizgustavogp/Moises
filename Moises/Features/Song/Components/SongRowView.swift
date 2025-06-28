@@ -1,5 +1,5 @@
 //
-//  ListItemRowView.swift
+//  SongRowView.swift
 //  Moises
 //
 //  Created by Gustavo Guimarães on 13/06/25.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ListItemRowView: View {
+struct SongRowView: View {
     let title: String
     let subtitle: String
     let imageUrl: String

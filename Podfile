@@ -11,8 +11,5 @@ target 'Moises' do
 
   target 'MoisesTests' do
     inherit! :search_paths
-    
-     pod 'ViewInspector', '0.10.2'
-
   end
 end

@@ -9,7 +9,7 @@ import Combine
 import Foundation
 
 @MainActor
-final class SongsViewModel: ObservableObject {
+final class SongsViewModel<S: Scheduler>: ObservableObject {
     
     @Published var searchTerm: String = ""
     @Published private(set) var songs: [SongModel] = []
@@ -17,8 +17,8 @@ final class SongsViewModel: ObservableObject {
     
     private var page = 0
     private let pageLimit: Int
+    private let scheduler: S
     private let repository: SongsRepository
-    private let debounceFor: RunLoop.SchedulerTimeType.Stride
     private var cancellables = Set<AnyCancellable>()
     
     var shouldShowErrorView: Bool {
@@ -34,11 +34,11 @@ final class SongsViewModel: ObservableObject {
     }
     
     init(pageLimit: Int = 30,
-         debounceFor: RunLoop.SchedulerTimeType.Stride = .milliseconds(1000),
+         scheduler: S = RunLoop.main,
          repository: SongsRepository = RemoteSongsRepository()) {
         
         self.pageLimit = pageLimit
-        self.debounceFor = debounceFor
+        self.scheduler = scheduler
         self.repository = repository
         
         initSearchTerm()
@@ -48,7 +48,7 @@ final class SongsViewModel: ObservableObject {
     private func initSearchTerm() {
         $searchTerm
             .dropFirst()
-            .debounce(for: debounceFor, scheduler: RunLoop.main)
+            .debounce(for: .seconds(1.5), scheduler: scheduler)
             .removeDuplicates()
             .sink { [weak self] term in
                 guard let self = self else { return }

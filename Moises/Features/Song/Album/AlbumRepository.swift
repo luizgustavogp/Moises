@@ -23,7 +23,7 @@ final class RemoteAlbumRepository: AlbumRepository {
             return []
         }
 
-        let response: SearchResponse<Song> = try await network.request(url)
+        let response: SearchResponse<Song> = try await network.request(url, retries: 2)
 
         return response.results
     }

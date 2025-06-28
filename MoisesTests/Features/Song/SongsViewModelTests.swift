@@ -5,143 +5,115 @@
 //  Created by Gustavo Guimarães on 13/06/25.
 //
 
-import XCTest
+import Combine
+import Testing
 @testable import Moises
 
 @MainActor
-final class SongsViewModelTests: XCTestCase {
+struct SongsViewModelTests {
     
     // MARK: - Helpers
     
-    func after(_ delay: TimeInterval = 0.1, fulfill expectation: XCTestExpectation? = nil, _ block: @escaping () -> Void) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
-            block()
-            expectation?.fulfill()
-        }
-    }
-    
-    func makeSUT(pageLimit: Int = 3, repository: SongsRepository) -> SongsViewModel {
-        SongsViewModel(pageLimit: pageLimit, debounceFor: .zero, repository: repository)
+    func makeSUT(pageLimit: Int = 3, repository: SongsRepository) -> SongsViewModel<ImmediateScheduler> {
+        SongsViewModel(pageLimit: pageLimit, scheduler: ImmediateScheduler.shared, repository: repository)
     }
     
     // MARK: - Tests
     
+    @Test
     func testInitialState() {
-        // Arrange
         let sut = makeSUT(pageLimit: 5, repository: MockSongsRepository())
         
-        // Assert
-        XCTAssertEqual(sut.state, .idle)
-        XCTAssertTrue(sut.songs.isEmpty)
-        XCTAssertFalse(sut.shouldShowEmptyState)
+        #expect(sut.state == .idle)
+        #expect(sut.songs.isEmpty)
+        #expect(!sut.shouldShowEmptyState)
     }
     
+    @Test
     func testLoadNextPageAppendsSongs() {
-        // Arrange
-        let expectation = expectation(description: "Songs should be loaded into ViewModel")
         let sut = makeSUT(pageLimit: 5, repository: MockSongsRepository(itemCount: 5))
         
-        // Act
+        _ = sut.$searchTerm
+            .dropFirst()
+            .sink { _ in
+                #expect(sut.songs.count == 5)
+                #expect(sut.state == .idle)
+            }
+        
         sut.searchTerm = "Rock"
-        
-        // Assert
-        after(fulfill: expectation) {
-            XCTAssertEqual(sut.songs.count, 5)
-            XCTAssertEqual(sut.state, .idle)
-        }
-        
-        wait(for: [expectation], timeout: 1)
     }
     
+    @Test
     func testPagination() {
-        // Arrange
-        let expectation = expectation(description: "Pagination should complete with 6 songs")
-        let sut = makeSUT(pageLimit: 3, repository: MockSongsRepository())
+        let sut = makeSUT(pageLimit: 3, repository: MockSongsRepository(itemCount: 6))
         
-        // Act
-        sut.searchTerm = "Rock"
-        
-        after {
-            Task {
-                await sut.loadNextPageIfNeeded(currentSong: sut.songs.last!)
-                
-                // Assert
-                self.after(fulfill: expectation) {
-                    XCTAssertEqual(sut.songs.count, 6)
-                    XCTAssertEqual(sut.state, .idle)
+        _ = sut.$searchTerm
+            .dropFirst()
+            .sink { _ in
+                Task {
+                    await sut.loadNextPageIfNeeded(currentSong: sut.songs.last!)
+                    #expect(sut.songs.count == 6)
+                    #expect(sut.state == .idle)
                 }
             }
-        }
         
-        wait(for: [expectation], timeout: 2)
+        sut.searchTerm = "Rock"
     }
     
+    @Test
     func testPaginationFinished() {
-        // Arrange
-        let expectation = expectation(description: "Pagination should finish after 2 items")
         let sut = makeSUT(pageLimit: 3, repository: MockSongsRepository(itemCount: 2))
         
-        // Act
+        _ = sut.$searchTerm
+            .dropFirst()
+            .sink { _ in
+                #expect(sut.songs.count == 2)
+                #expect(sut.state == .finished)
+            }
+        
         sut.searchTerm = "Rock"
-        
-        // Assert
-        after(fulfill: expectation) {
-            XCTAssertEqual(sut.songs.count, 2)
-            XCTAssertEqual(sut.state, .finished)
-        }
-        
-        wait(for: [expectation], timeout: 1)
     }
     
+    @Test
     func testEmptyStateVisibility() {
-        // Arrange
-        let expectation = expectation(description: "Empty state should be visible")
         let sut = makeSUT(repository: MockEmptySongsRepository())
         
-        // Act
+        _ = sut.$searchTerm
+            .dropFirst()
+            .sink { _ in
+                #expect(sut.shouldShowEmptyState)
+            }
+        
         sut.searchTerm = "Rock"
-        
-        // Assert
-        after(fulfill: expectation) {
-            XCTAssertTrue(sut.shouldShowEmptyState)
-        }
-        
-        wait(for: [expectation], timeout: 1)
     }
     
+    @Test
     func testErrorStateVisibility() {
-        // Arrange
-        let expectation = expectation(description: "Error state should be visible")
         let sut = makeSUT(repository: MockFailingSongsRepository())
         
-        // Act
+        _ = sut.$searchTerm
+            .dropFirst()
+            .sink { _ in
+                #expect(sut.shouldShowErrorView)
+            }
+        
         sut.searchTerm = "Rock"
-        
-        // Assert
-        after(fulfill: expectation) {
-            XCTAssertTrue(sut.shouldShowErrorView)
-        }
-        
-        wait(for: [expectation], timeout: 1)
     }
     
+    @Test
     func testRefreshClearsSongsAndReloads() {
-        let expectation = expectation(description: "Refresh should reload songs")
         let sut = makeSUT(repository: MockSongsRepository(itemCount: 2))
-
-        sut.searchTerm = "Rock"
         
-        after {
-            Task {
-                await sut.refresh()
-                self.after(fulfill: expectation) {
-                    XCTAssertEqual(sut.songs.count, 2)
-                    XCTAssertEqual(sut.state, .finished)
+        _ = sut.$searchTerm
+            .dropFirst()
+            .sink { _ in
+                Task {
+                    await sut.refresh()
+                    #expect(sut.songs.count == 2)
+                    #expect(sut.state == .finished)
                 }
             }
-        }
-
-        wait(for: [expectation], timeout: 1)
+        
+        sut.searchTerm = "Rock"
     }
-
 }

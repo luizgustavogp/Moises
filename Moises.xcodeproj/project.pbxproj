@@ -144,7 +144,6 @@
 				EC7C0F892DF372A3005FCB16 /* Sources */,
 				EC7C0F8A2DF372A3005FCB16 /* Frameworks */,
 				EC7C0F8B2DF372A3005FCB16 /* Resources */,
-				371FE233ADCD221142073B7B /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -188,8 +187,6 @@
 			);
 			mainGroup = EC7C0F732DF372A1005FCB16;
 			minimizedProjectReferenceProxies = 1;
-			packageReferences = (
-			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = EC7C0F7D2DF372A1005FCB16 /* Products */;
 			projectDirPath = "";
@@ -219,23 +216,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		371FE233ADCD221142073B7B /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MoisesTests/Pods-MoisesTests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-MoisesTests/Pods-MoisesTests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-MoisesTests/Pods-MoisesTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		4019529A8174C5D18E4B457A /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
