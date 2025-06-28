@@ -24,6 +24,7 @@ final class DSMMiniPlayerControlViewModel: ObservableObject {
         
         updateTime()
         observeCurrentTime()
+        observedidFinishPlaying()
     }
     
     //MARK: Private methods
@@ -38,6 +39,17 @@ final class DSMMiniPlayerControlViewModel: ObservableObject {
                     self.progress = duration > 0 ? current / duration : 0
                 }
                 self.updateTime()
+            }
+            .store(in: &cancellables)
+    }
+    
+    private func observedidFinishPlaying() {
+        playerService.didFinishPlayingPublisher
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] _ in
+                guard let self else { return }
+                
+                self.isPlaying = false
             }
             .store(in: &cancellables)
     }

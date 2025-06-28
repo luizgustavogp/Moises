@@ -19,18 +19,29 @@ protocol DSMMiniPlayerService {
     func stop()
     
     var currentTimePublisher: AnyPublisher<Double, Never> { get }
+    var didFinishPlayingPublisher: AnyPublisher<Void, Never> { get }
 }
 
 final class DSMMiniAvPlayerService: DSMMiniPlayerService {
     
+    // MARK: Private properties
     private var timeObserver: Any?
+    private var endObserver: AnyCancellable?
+    
     private let player: AVPlayer
     private let queuePlayback: DSMQueuePlayback
     private var currentlyPlayingItem: DSMQueuePlaybackItem?
     
-    private let currentTimeSubject = PassthroughSubject<Double, Never>()
+    private let currentTimeSubject = CurrentValueSubject<Double, Never>(0)
+    private let didFinishPlayingSubject = PassthroughSubject<Void, Never>()
+    
+    // MARK: Publisher
     var currentTimePublisher: AnyPublisher<Double, Never> {
         currentTimeSubject.eraseToAnyPublisher()
+    }
+    
+    var didFinishPlayingPublisher: AnyPublisher<Void, Never> {
+        didFinishPlayingSubject.eraseToAnyPublisher()
     }
     
     init(player: AVPlayer = AVPlayer(),
@@ -40,6 +51,7 @@ final class DSMMiniAvPlayerService: DSMMiniPlayerService {
         self.queuePlayback = queuePlayback
         self.preLoadCurrentTrack()
         self.startObservingProgress()
+        self.observePlayerDidFinish()
     }
     
     // MARK: Private methods
@@ -56,6 +68,14 @@ final class DSMMiniAvPlayerService: DSMMiniPlayerService {
         timeObserver = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) {  [weak self] time in
             self?.currentTimeSubject.send(time.seconds)
         }
+    }
+    
+    private func observePlayerDidFinish() {
+        endObserver = NotificationCenter.default
+            .publisher(for: .AVPlayerItemDidPlayToEndTime)
+            .sink { [weak self] _ in
+                self?.didFinishPlayingSubject.send(())
+            }
     }
     
     private func play(track: DSMQueuePlaybackItem) {
@@ -117,6 +137,9 @@ final class DSMMiniAvPlayerService: DSMMiniPlayerService {
     deinit {
         if let observer = timeObserver {
             player.removeTimeObserver(observer)
+            timeObserver = nil
         }
+        
+        endObserver?.cancel()
     }
 }
